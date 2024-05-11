@@ -16,16 +16,23 @@
 
             <!-- Header -->
             <header>
-                <span>
-                    <i class="fa-solid fa-ellipsis"></i> 
-                    sketch 
-                    <i class="fa-solid fa-wifi"></i>
+                <span class="header-nav">
+                    <span class="wifi">
+                        <i class="fa-solid fa-ellipsis"></i> 
+                        sketch 
+                        <i class="fa-solid fa-wifi"></i>
+                    </span>
+                    <span class="time">12:46</span>
+                    <span class="battery">
+                        100%
+                        <i class="fa-solid fa-battery-full"></i>
+                    </span>
                 </span>
-                <span class="time">12:46</span>
+                <!-- <span class="time">12:46</span>
                 <span class="battery">
                     100%
                     <i class="fa-solid fa-battery-full"></i>
-                </span>
+                </span> -->
                 <h4>Now playing</h4>
                 <h2>String 57th & 9th</h2>
             </header>
@@ -33,12 +40,71 @@
             <!-- CD -->
             <div class="CD">
                 <div class="cd-thumb" style="background-image: 
-                url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg')"">
+                url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg')">
                 </div>
             </div>
 
             <!-- Control -->
-            
+            <div class="control">
+                <div class="btn btn-repeat">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </div>
+                <div class="btn btn-backward">
+                    <i class="fa-solid fa-backward"></i>
+                </div>
+                <div class="btn btn-play">
+                    <i class="fa-solid fa-play icon-play"></i>
+                    <i class="fa-solid fa-pause icon-pause"></i>
+                </div>
+                <div class="btn btn-forward">
+                    <i class="fa-solid fa-forward"></i>
+                </div>
+                <div class="btn btn-shuffle">
+                    <i class="fa-solid fa-shuffle"></i>
+                </div>
+            </div>
+
+            <input id="progress" class="progress" type="range" value="0" step="1" 
+            min="0" max="100"></input>
+
+            <audio id="audio" src=""></audio>
+        </div>
+
+        <!-- Playlist -->
+        <div class="playlist">
+            <div class="song">
+                <div class="thumb" style="background-image: 
+                url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg');"></div>
+                <div class="body">
+                    <h3 class="title">Music name</h3>
+                    <p class="author">Singer</p>
+                </div>
+                <div class="option">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </div>
+            </div>
+            <div class="song">
+                <div class="thumb" style="background-image: 
+                url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg');"></div>
+                <div class="body">
+                    <h3 class="title">Music name</h3>
+                    <p class="author">Singer</p>
+                </div>
+                <div class="option">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </div>
+            </div>
+            <div class="song">
+                <div class="thumb" style="background-image: 
+                url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg');"></div>
+                <div class="body">
+                    <h3 class="title">Music name</h3>
+                    <p class="author">Singer</p>
+                </div>
+                <div class="option">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </div>
+            </div>
         </div>
     </div>
 </body>

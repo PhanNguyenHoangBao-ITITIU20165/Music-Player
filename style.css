@@ -31,6 +31,18 @@ body {
     border-bottom: 1px solid #ebebeb;
 }
 
+.player .icon-pause{
+    display: none;
+}
+
+.player.playing .icon-pause{
+    display: inline-block;
+}
+
+.player.playing .icon-play{
+    display: none;
+}
+
 /* header */
 
 header{
@@ -40,14 +52,18 @@ header{
 
 header .time{
     position: relative;
-    margin: 130px;
     right: 13px;
+}
+
+header .header-nav{
+    display: flex;
+    justify-content: space-between;
 }
 
 header h4 {
     color: var(--primary-color);
     font-size: 12px;
-    padding: 20px 0px;
+    padding: 10px 0px;
 }
 
 header h2{
@@ -70,4 +86,63 @@ header h2{
     background-color: #333;
     background-size: cover;
     margin: auto;
+}
+
+/* Control */
+.control{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 36px 0px 26px 0px;
+}
+
+.control .btn{
+    color: #666;
+    font-size: 18px;
+    /* padding: 18px; */
+}
+
+.control .btn-play{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+}
+
+/* Progress */
+.progress{
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.progress::-webkit-slider-thumb{
+    /* -webkit-appearance: none; */
+    appearance: none;
+    width: 12px;
+    height: 6px;
+    background-color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* Playlist */
+
+.playlist{
+    margin-top: 808px;
+    padding: 12px;
+}
+
+.song{
+    display: flex;
+    align-items: center;
+    
 }
