@@ -38,7 +38,7 @@
             </header>
 
             <!-- CD -->
-            <div class="CD">
+            <div class="cd">
                 <div class="cd-thumb" style="background-image: 
                 url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg')">
                 </div>
@@ -72,7 +72,7 @@
 
         <!-- Playlist -->
         <div class="playlist">
-            <div class="song">
+            <!-- <div class="song">
                 <div class="thumb" style="background-image: 
                 url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg');"></div>
                 <div class="body">
@@ -105,30 +105,187 @@
                     <i class="fa-solid fa-ellipsis"></i>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
-
+    
     <!-- JS script -->
-
+    
     <script>
         const $ = document.querySelector.bind(document)
         const $$ = document.querySelectorAll.bind(document)
+        const player = $('.player')
+        const heading = $('header h2')
+        const cdThumb = $('.cd-thumb')
+        const audio = $('#audio')
+        const cd = $('.cd')
+        const playBtn = $('.btn-play')
+        // const pauseBtn = $('.btn-pause')
+        const progress = $('#progress')
         
         const app = {
+            currentIndex: 0,
+            isPlay: false,
             songs: [
                 {
                     name: 'Thuy Trieu',
                     singer: 'Quang Hung MasterD',
                     path: './assets/music/song1.mp3',
-                    image: './assets/images/song1.png'
-                }
+                    image: './assets/img/song1.jpg'
+                },
+
+                {
+                    name: 'Em Co Biet',
+                    singer: 'H2K',
+                    path: './assets/music/song2.mp3',
+                    image: './assets/img/song2.jpg'
+                },
+
+                {
+                    name: 'Da Da Da',
+                    singer: 'Tanir',
+                    path: './assets/music/song3.mp3',
+                    image: './assets/img/song3.jpg'
+                },
+
+                {
+                    name: 'Hi The Gioi',
+                    singer: 'Blacka, Arthur',
+                    path: './assets/music/song4.mp3',
+                    image: './assets/img/song4.jpg'
+                },
+
+                {
+                    name: 'Dong Phai Mo Dang Ai',
+                    singer: 'Datkaa',
+                    path: './assets/music/song5.mp3',
+                    image: './assets/img/song5.jpg'
+                },
+
+                {
+                    name: 'Gio',
+                    singer: 'Jank, 1 9 6 7',
+                    path: './assets/music/song6.mp3',
+                    image: './assets/img/song6.jpg'
+                },
+
+                {
+                    name: 'La Anh',
+                    singer: 'Pham Lich, BMZ',
+                    path: './assets/music/song7.mp3',
+                    image: './assets/img/song7.jpg'
+                },
+
+                {
+                    name: 'Waiting For You',
+                    singer: 'Mono, Onionn',
+                    path: './assets/music/song8.mp3',
+                    image: './assets/img/song8.jpg'
+                },
+
+                {
+                    name: 'Ngu Mot Minh',
+                    singer: 'Hieuthuhai',
+                    path: './assets/music/song9.mp3',
+                    image: './assets/img/song9.jpg'
+                },
             ],
 
             render: function(){
+                const htmls = this.songs.map(song => {
+                    return `
+                        <div class="song">
+                                <div class="thumb" style="background-image: 
+                                url('${song.image}');"></div>
+                                <div class="body">
+                                    <h3 class="title">${song.name}</h3>
+                                    <p class="author">${song.singer}</p>
+                                </div>
+                                <div class="option">
+                                    <i class="fa-solid fa-ellipsis"></i>
+                            </div>
+                        </div>`
+                })
+                $('.playlist').innerHTML = htmls.join('')
+            },
 
+            handleEvents: function(){
+                const cdwidth = cd.offsetWidth
+
+                // Xu ly khi cuon trang se phong to/thu nho CD
+                document.onscroll = function(){
+                    const scrollTop = window.scrollY || document.documentElement.scrollTop
+                    const newCdWidth = cdwidth - scrollTop
+
+                    cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0
+                    // if(newCdWidth > 0)
+                    //     cd.style.width = newCdWidth + 'px'
+                    // else{
+                    //     newCdWidth = 0
+                    //     cd.style.width = newCdWidth + 'px'
+                    // }
+                    cd.style.opacity = newCdWidth/cdwidth
+                }
+
+                // Xu ly khi nhan nut Play
+                playBtn.onclick = ()=>{
+                    if(app.isPlay){
+                        audio.pause()
+                    }
+                    else{
+                        audio.play()
+                    }
+                }
+                
+                // Khi bai hat duoc play
+                audio.onplay = () =>{
+                    app.isPlay = true
+                    player.classList.add('playing')
+                }
+
+                // Khi bai hat bi pause
+                audio.onpause = () =>{
+                    app.isPlay = false
+                    player.classList.remove('playing')
+                }
+
+                // Khi tien do bai hat thay doi theo progress
+                audio.ontimeupdate = ()=>{
+                    if(audio.duration){
+                        const progressPercent = Math.floor(audio.currentTime/audio.duration*100)
+                        progress.value = progressPercent
+                    }
+                }
+
+                // Xu ly khi tua bai hat
+                progress.oninput = (e)=>{
+                    const seekTime = e.target.value*audio.duration/100
+                    audio.currentTime = seekTime
+                }
+            },
+
+            defineProperties: function(){
+                Object.defineProperty(this, 'currentSong', {
+                    get: function() {
+                        return this.songs[this.currentIndex]
+                    }
+                })
+            },
+
+            loadCurrentSong: function(){
+
+                heading.textContent = this.currentSong.name
+                cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`
+                audio.src = this.currentSong.path
             },
 
             start: function(){
+                // Dinh nghia cac thuoc tinh cho obj
+                this.defineProperties()
+                // Lang nghe / xu ly cac su kien (Dom events)
+                this.handleEvents()
+                //  Tai thong tin bai hat vao UI khi chay ung dung
+                this.loadCurrentSong()
+                // Render playlist
                 this.render()
             },
         }
