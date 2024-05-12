@@ -107,5 +107,33 @@
             </div>
         </div>
     </div>
+
+    <!-- JS script -->
+
+    <script>
+        const $ = document.querySelector.bind(document)
+        const $$ = document.querySelectorAll.bind(document)
+        
+        const app = {
+            songs: [
+                {
+                    name: 'Thuy Trieu',
+                    singer: 'Quang Hung MasterD',
+                    path: './assets/music/song1.mp3',
+                    image: './assets/images/song1.png'
+                }
+            ],
+
+            render: function(){
+
+            },
+
+            start: function(){
+                this.render()
+            },
+        }
+
+        app.start()
+    </script>
 </body>
 </html>
