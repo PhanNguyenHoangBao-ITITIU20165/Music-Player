@@ -125,6 +125,8 @@
         const prevBtn = $('.btn-backward')
         const randomBtn = $('.btn-shuffle')
         const repeatBtn = $('.btn-repeat')
+        const song = $('.song')
+        const playlist = $('.playlist')
 
         
         const app = {
@@ -216,7 +218,7 @@
                             </div>
                         </div>`
                 })
-                $('.playlist').innerHTML = htmls.join('')
+                playlist.innerHTML = htmls.join('')
             },
 
             handleEvents: function(){
@@ -308,12 +310,14 @@
                 nextBtn.onclick = ()=>{
                     app.nextSong()
                     audio.play()
+                    app.scrollToActiveSong()
                 }
 
                 // Khi back bai hat
                 prevBtn.onclick = ()=> {
                     app.prevSong()
                     audio.play()
+                    app.scrollToActiveSong()
                 }
 
                 // Khi random bai hat
@@ -343,6 +347,11 @@
                         this.isRandom=false
                         randomBtn.classList.remove('active')
                     }
+                }
+
+                // Lang nghe hanh vi click vao playlist
+                playlist.onclick = (e)=>{
+                    
                 }
             },
 
@@ -388,6 +397,15 @@
                 this.currentIndex = newIndex
 
                 this.loadCurrentSong()
+            },
+
+            scrollToActiveSong: function(){
+                setTimeout(()=>{
+                    $('.song.active').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    })
+                }, 150)
             },
 
             start: function(){
