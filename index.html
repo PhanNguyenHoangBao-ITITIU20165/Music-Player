@@ -121,10 +121,21 @@
         const playBtn = $('.btn-play')
         // const pauseBtn = $('.btn-pause')
         const progress = $('#progress')
+        const nextBtn = $('.btn-forward')
+        const prevBtn = $('.btn-backward')
+        const randomBtn = $('.btn-shuffle')
+        const repeatBtn = $('.btn-repeat')
+
         
         const app = {
             currentIndex: 0,
             isPlay: false,
+            isRandom: false,
+            isRepeat: false,
+            rotationInterval: null,
+            rotationSpeed: 15,
+            currentRotation: 0,
+            rotationIncrement: 1,
             songs: [
                 {
                     name: 'Thuy Trieu',
@@ -191,9 +202,9 @@
             ],
 
             render: function(){
-                const htmls = this.songs.map(song => {
+                const htmls = this.songs.map((song, index) => {
                     return `
-                        <div class="song">
+                        <div class="song ${index === this.currentIndex ? 'active' : ''}">
                                 <div class="thumb" style="background-image: 
                                 url('${song.image}');"></div>
                                 <div class="body">
@@ -211,18 +222,27 @@
             handleEvents: function(){
                 const cdwidth = cd.offsetWidth
 
+                // const cdThumbAnimate = cdThumb.animate([
+                //     {transform: 'rotate(360deg)'}
+                // ], {
+                //     duration: 10000,
+                //     iteration: Infinity
+                // })
+                // cdThumbAnimate.play()
+                        
+                // Xu ly anh CD quay va dung
+                rotateCDThumb = ()=>{
+                    cdThumb.style.transform = `rotate(${app.currentRotation}deg)`
+                    app.currentRotation += app.rotationIncrement
+                } 
+
                 // Xu ly khi cuon trang se phong to/thu nho CD
                 document.onscroll = function(){
                     const scrollTop = window.scrollY || document.documentElement.scrollTop
                     const newCdWidth = cdwidth - scrollTop
 
                     cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0
-                    // if(newCdWidth > 0)
-                    //     cd.style.width = newCdWidth + 'px'
-                    // else{
-                    //     newCdWidth = 0
-                    //     cd.style.width = newCdWidth + 'px'
-                    // }
+
                     cd.style.opacity = newCdWidth/cdwidth
                 }
 
@@ -240,15 +260,36 @@
                 audio.onplay = () =>{
                     app.isPlay = true
                     player.classList.add('playing')
+                    clearInterval(app.rotationInterval)
+                    app.rotationInterval = setInterval(rotateCDThumb, app.rotationSpeed)
+                    this.render()
                 }
 
                 // Khi bai hat bi pause
                 audio.onpause = () =>{
                     app.isPlay = false
                     player.classList.remove('playing')
+                    clearInterval(app.rotationInterval)
+                }
+                
+                // Khi bai hat het thi dung quay CD, tra lai vi tri ban dau va next/random bai moi
+                audio.onended = ()=>{
+                    currentRotation = 0; 
+                    if(app.isRandom){
+                        app.randomSong()
+                    }
+                    else if(app.isRepeat){
+                        app.loadCurrentSong()
+                    }
+                    else{
+                        app.nextSong()
+                    }
+                    cdThumb.style.transform = `rotate(${currentRotation}deg)`; 
+                    audio.play()
+                    clearInterval(app.rotationInterval);
                 }
 
-                // Khi tien do bai hat thay doi theo progress
+                // Tien do bai hat thay doi theo progress
                 audio.ontimeupdate = ()=>{
                     if(audio.duration){
                         const progressPercent = Math.floor(audio.currentTime/audio.duration*100)
@@ -256,14 +297,57 @@
                     }
                 }
 
+
                 // Xu ly khi tua bai hat
                 progress.oninput = (e)=>{
                     const seekTime = e.target.value*audio.duration/100
                     audio.currentTime = seekTime
                 }
+
+                // Khi next bai hat
+                nextBtn.onclick = ()=>{
+                    app.nextSong()
+                    audio.play()
+                }
+
+                // Khi back bai hat
+                prevBtn.onclick = ()=> {
+                    app.prevSong()
+                    audio.play()
+                }
+
+                // Khi random bai hat
+                randomBtn.onclick = ()=>{
+                    if(this.isRandom){
+                        this.isRandom = false
+                        randomBtn.classList.remove('active')
+                    }
+                    else{
+                        this.isRandom = true
+                        randomBtn.classList.add('active')
+                        this.isRepeat = false
+                        repeatBtn.classList.remove('active')
+                    }
+                    // cach 2
+                    // this.isRandom = !this.isRandom
+                    // randomBtn.classList.toggle('active', this.isRandom)
+                }
+
+                repeatBtn.onclick = ()=>{
+                    if(this.isRepeat){
+                        this.isRepeat=false;
+                        repeatBtn.classList.remove('active')
+                    }else{
+                        this.isRepeat=true;
+                        repeatBtn.classList.add('active')
+                        this.isRandom=false
+                        randomBtn.classList.remove('active')
+                    }
+                }
             },
 
             defineProperties: function(){
+                // Dinh nghia thuoc tinh moi co ten currentSong
                 Object.defineProperty(this, 'currentSong', {
                     get: function() {
                         return this.songs[this.currentIndex]
@@ -276,6 +360,34 @@
                 heading.textContent = this.currentSong.name
                 cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`
                 audio.src = this.currentSong.path
+            },
+
+            nextSong: function(){
+                this.currentIndex++
+                if(this.currentIndex >= this.songs.length){
+                    this.currentIndex = 0
+                }
+                this.loadCurrentSong()
+            },
+
+            prevSong: function(){
+                this.currentIndex--
+                if(this.currentIndex < 0){
+                    this.currentIndex = this.songs.length - 1
+                }
+                this.loadCurrentSong()
+            },
+
+            // Random bai hat va dam bao khong bi lap bai hat
+            randomSong : function(){
+                let newIndex
+                do{
+                    newIndex = Math.floor(Math.random() * this.songs.length)
+                }while(newIndex === this.currentIndex)
+
+                this.currentIndex = newIndex
+
+                this.loadCurrentSong()
             },
 
             start: function(){
