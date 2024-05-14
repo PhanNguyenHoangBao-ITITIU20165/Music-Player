@@ -117,6 +117,21 @@ header h2{
     color: var(--primary-color);
 }
 
+.volume{
+    display: flex;
+    margin-bottom: 10px;
+    margin-left: 25%;
+}
+
+.change-volume{
+    width: 60%;
+}
+
+.volume .volume-icon{
+    width: 10px;
+    margin-right: 15px;
+}
+
 /* Progress */
 .progress{
     width: 100%;
